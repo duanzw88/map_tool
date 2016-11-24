@@ -44,6 +44,10 @@ extern int  layer_get_element_count(T layer);
  * @return       element对象
  */
 extern element_t layer_get_element_by_index(T layer,int index);
+//获取单项路的element
+extern element_t layer_get_element_oneway(T layer);
+//获取双向路的elememnt
+extern element_t layer_get_element_twoway(T layer);
 
 #undef T
 #endif

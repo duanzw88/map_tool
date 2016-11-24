@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "assert.h"
+#include "atom.h"
 #include "mem.h"
 #include "seq.h"
 #include "layer.h"
@@ -24,8 +25,10 @@ T  layer_new(const char *name)
     T layer;
     NEW(layer);
 
-    layer->name = CALLOC(1,strlen(name) + 1);
-    strncpy(layer->name,name,strlen(name));
+    // layer->name = CALLOC(1,strlen(name) + 1);
+    // strncpy(layer->name,name,strlen(name));
+    //
+    layer->name = (char *)atom_string(name);
     layer->element_seq = seq_new(0);
 
     return layer;
@@ -86,4 +89,36 @@ element_t layer_get_element_by_index(T layer,int index)
     assert(index >= 0 && index < seq_length(layer->element_seq));
 
     return seq_get(layer->element_seq,index);
+}
+//获取单项路的element
+element_t layer_get_element_oneway(T layer)
+{
+    element_t element;
+    int i;
+    for(i = 0; i < seq_length(layer->element_seq); i++)
+    {
+        element = seq_get(layer->element_seq,i);
+        if(strcmp(element_get_name(element),"one-way") == 0)
+        {
+            return element;
+        }
+    }
+
+    return NULL;
+}
+//获取双向路的elememnt
+element_t layer_get_element_twoway(T layer)
+{
+    element_t element;
+    int i;
+    for(i = 0; i < seq_length(layer->element_seq); i++)
+    {
+        element = seq_get(layer->element_seq,i);
+        if(strcmp(element_get_name(element),"two-way") == 0)
+        {
+            return element;
+        }
+    }
+
+    return NULL;
 }

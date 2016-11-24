@@ -2,6 +2,7 @@
 #define __FLOOR_H__
 
 #include "layer.h"
+#include "wdigraph.h"
 
 #define T floor_t
 typedef struct T *T;
@@ -33,6 +34,8 @@ extern void floor_set_buildname(T floor,const char *build_name);
  * @param index 索引值
  */
 extern void floor_set_index(T floor,int index);
+extern void floor_set_grid(T floor,int grid);
+
 /**
  * 设置楼层宽度
  * @param floor 楼层对象
@@ -70,6 +73,7 @@ extern const char *floor_get_name(T floor);
  * @return       [description]
  */
 extern int floor_get_index(T floor);
+extern int floor_get_grid(T floor);
 /**
  * [floor_get_width description]
  * @param  floor [description]
@@ -97,5 +101,14 @@ extern int floor_get_layer_count(T floor);
  * @return       layer对象
  */
 extern layer_t floor_get_layer_by_index(T floor,int index);
+extern layer_t floor_get_layer_by_name(T floor,const char *name);
+extern int      floor_get_route_count(T floor);
+//添加路点
+
+extern seq_t floor_add_oneway_road(T floor);
+extern seq_t floor_add_twoway_road(T floor);
+//extern void floor_add_all_road_point(T floor,seq_t oneway_points,seq_t twoway_points);
+extern int floor_get_key(T floor,double x,double y);
+
 #undef T
 #endif

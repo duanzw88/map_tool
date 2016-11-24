@@ -1,0 +1,475 @@
+{
+	"type": "Building",
+	"name": "default building name",
+	"floors": [
+		{
+			"type": "Floor",
+			"name": "background",
+			"width": 2605,
+			"height": 2390,
+			"grid":40,
+			"layers": [
+				{
+					"type": "Layer",
+					"name": "road",
+					"feature_collections": [
+						{
+							"type": "FeatureCollection",
+							"name": "two-way",
+							"features": [
+								{
+									"type": "Feature",
+									"name": "road1",
+									"geoType": "LineString",
+									"coords": [
+										[
+											617,
+											753
+										],
+										[
+											320,
+											1144
+										]
+									],
+									"style": {
+										"fill": {
+											"color": {
+												"r": 0,
+												"g": 0,
+												"b": 0,
+												"a": 0
+											}
+										},
+										"stroke": {
+											"color": {
+												"r": 88,
+												"g": 89,
+												"b": 93,
+												"a": 1
+											},
+											"width": 1
+										}
+									}
+								},
+								{
+									"type": "Feature",
+									"name": "road1 拷贝",
+									"geoType": "LineString",
+									"coords": [
+										[
+											617,
+											753
+										],
+										[
+											825,
+											481
+										]
+									],
+									"style": {
+										"fill": {
+											"color": {
+												"r": 0,
+												"g": 0,
+												"b": 0,
+												"a": 0
+											}
+										},
+										"stroke": {
+											"color": {
+												"r": 88,
+												"g": 89,
+												"b": 93,
+												"a": 1
+											},
+											"width": 1
+										}
+									}
+								},
+								{
+									"type": "Feature",
+									"name": "road5",
+									"geoType": "LineString",
+									"coords": [
+										[
+											1754,
+											1993
+										],
+										[
+											1808,
+											1656
+										]
+									],
+									"style": {
+										"fill": {
+											"color": {
+												"r": 0,
+												"g": 0,
+												"b": 0,
+												"a": 0
+											}
+										},
+										"stroke": {
+											"color": {
+												"r": 88,
+												"g": 89,
+												"b": 93,
+												"a": 1
+											},
+											"width": 1
+										}
+									}
+								},
+								{
+									"type": "Feature",
+									"name": "road6",
+									"geoType": "LineString",
+									"coords": [
+										[
+											1754,
+											1993
+										],
+										[
+											1719,
+											2222
+										]
+									],
+									"style": {
+										"fill": {
+											"color": {
+												"r": 0,
+												"g": 0,
+												"b": 0,
+												"a": 0
+											}
+										},
+										"stroke": {
+											"color": {
+												"r": 88,
+												"g": 89,
+												"b": 93,
+												"a": 1
+											},
+											"width": 1
+										}
+									}
+								},
+								{
+									"type": "Feature",
+									"name": "road7",
+									"geoType": "LineString",
+									"coords": [
+										[
+											2058,
+											2284
+										],
+										[
+											1719,
+											2222
+										]
+									],
+									"style": {
+										"fill": {
+											"color": {
+												"r": 0,
+												"g": 0,
+												"b": 0,
+												"a": 0
+											}
+										},
+										"stroke": {
+											"color": {
+												"r": 88,
+												"g": 89,
+												"b": 93,
+												"a": 1
+											},
+											"width": 1
+										}
+									}
+								},
+								{
+									"type": "Feature",
+									"name": "road8",
+									"geoType": "LineString",
+									"coords": [
+										[
+											2058,
+											2284
+										],
+										[
+											2179,
+											1603
+										]
+									],
+									"style": {
+										"fill": {
+											"color": {
+												"r": 0,
+												"g": 0,
+												"b": 0,
+												"a": 0
+											}
+										},
+										"stroke": {
+											"color": {
+												"r": 88,
+												"g": 89,
+												"b": 93,
+												"a": 1
+											},
+											"width": 1
+										}
+									}
+								},
+								{
+									"type": "Feature",
+									"name": "road9",
+									"geoType": "LineString",
+									"coords": [
+										[
+											1992,
+											1380
+										],
+										[
+											2179,
+											1603
+										]
+									],
+									"style": {
+										"fill": {
+											"color": {
+												"r": 0,
+												"g": 0,
+												"b": 0,
+												"a": 0
+											}
+										},
+										"stroke": {
+											"color": {
+												"r": 88,
+												"g": 89,
+												"b": 93,
+												"a": 1
+											},
+											"width": 1
+										}
+									}
+								},
+								{
+									"type": "Feature",
+									"name": "road10",
+									"geoType": "LineString",
+									"coords": [
+										[
+											1992,
+											1380
+										],
+										[
+											824,
+											481
+										]
+									],
+									"style": {
+										"fill": {
+											"color": {
+												"r": 0,
+												"g": 0,
+												"b": 0,
+												"a": 0
+											}
+										},
+										"stroke": {
+											"color": {
+												"r": 88,
+												"g": 89,
+												"b": 93,
+												"a": 1
+											},
+											"width": 1
+										}
+									}
+								},
+								{
+									"type": "Feature",
+									"name": "road11",
+									"geoType": "LineString",
+									"coords": [
+										[
+											1992,
+											1380
+										],
+										[
+											1808,
+											1656
+										]
+									],
+									"style": {
+										"fill": {
+											"color": {
+												"r": 0,
+												"g": 0,
+												"b": 0,
+												"a": 0
+											}
+										},
+										"stroke": {
+											"color": {
+												"r": 88,
+												"g": 89,
+												"b": 93,
+												"a": 1
+											},
+											"width": 1
+										}
+									}
+								}
+							]
+						},
+						{
+							"type": "FeatureCollection",
+							"name": "one-way",
+							"features": [
+								{
+									"type": "Feature",
+									"name": "road2",
+									"geoType": "LineString",
+									"coords": [
+										[
+											1326,
+											1666
+										],
+										[
+											320,
+											1144
+										]
+									],
+									"style": {
+										"fill": {
+											"color": {
+												"r": 0,
+												"g": 0,
+												"b": 0,
+												"a": 0
+											}
+										},
+										"stroke": {
+											"color": {
+												"r": 88,
+												"g": 89,
+												"b": 93,
+												"a": 1
+											},
+											"width": 1
+										}
+									}
+								},
+								{
+									"type": "Feature",
+									"name": "road3",
+									"geoType": "LineString",
+									"coords": [
+										[
+											1326,
+											1666
+										],
+										[
+											1288,
+											1915
+										]
+									],
+									"style": {
+										"fill": {
+											"color": {
+												"r": 0,
+												"g": 0,
+												"b": 0,
+												"a": 0
+											}
+										},
+										"stroke": {
+											"color": {
+												"r": 88,
+												"g": 89,
+												"b": 93,
+												"a": 1
+											},
+											"width": 1
+										}
+									}
+								},
+								{
+									"type": "Feature",
+									"name": "road4",
+									"geoType": "LineString",
+									"coords": [
+										[
+											1754,
+											1993
+										],
+										[
+											1288,
+											1915
+										]
+									],
+									"style": {
+										"fill": {
+											"color": {
+												"r": 0,
+												"g": 0,
+												"b": 0,
+												"a": 0
+											}
+										},
+										"stroke": {
+											"color": {
+												"r": 88,
+												"g": 89,
+												"b": 93,
+												"a": 1
+											},
+											"width": 1
+										}
+									}
+								},
+								{
+									"type": "Feature",
+									"name": "road12",
+									"geoType": "LineString",
+									"coords": [
+										[
+											617,
+											753
+										],
+										[
+											1808,
+											1656
+										]
+									],
+									"style": {
+										"fill": {
+											"color": {
+												"r": 0,
+												"g": 0,
+												"b": 0,
+												"a": 0
+											}
+										},
+										"stroke": {
+											"color": {
+												"r": 88,
+												"g": 89,
+												"b": 93,
+												"a": 1
+											},
+											"width": 1
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

@@ -33,12 +33,21 @@ typedef enum _itemPathCommandId
     ITEM_PATH_CMD_ID_MOVETO = 0,
 	ITEM_PATH_CMD_ID_LINETO,
 	ITEM_PATH_CMD_ID_CUBIC_CURVETO,
-	ITEM_PATH_CMD_ID_SMOOTH_CUBIC_CURVETO,
-	ITEM_PATH_CMD_ID_QUADRATIC_CURVETO,
-	ITEM_PATH_CMD_ID_SMOOTH_QUADRATIC_CURVETO,
 	ITEM_PATH_CMD_ID_ARCTO,
 	ITEM_PATH_CMD_ID_END
 }itemPathCommandId;
+
+// typedef enum _itemPathCommandId
+// {
+//     ITEM_PATH_CMD_ID_MOVETO = 0,
+// 	ITEM_PATH_CMD_ID_LINETO,
+// 	ITEM_PATH_CMD_ID_CUBIC_CURVETO,
+// 	ITEM_PATH_CMD_ID_SMOOTH_CUBIC_CURVETO,
+// 	ITEM_PATH_CMD_ID_QUADRATIC_CURVETO,
+// 	ITEM_PATH_CMD_ID_SMOOTH_QUADRATIC_CURVETO,
+// 	ITEM_PATH_CMD_ID_ARCTO,
+// 	ITEM_PATH_CMD_ID_END
+// }itemPathCommandId;
 
 // --Path:MoveTo--
 struct _itemPathCommane_Moveto
@@ -65,46 +74,57 @@ typedef struct _itemPathCommand_CubicCruveto
 }*itemPathCommand_CubicCruveto;
 
 //	-- Path : SmoothCubicCurveTo 平滑曲线--
-typedef struct _itemPathCommand_SmoothCubicCurveto
-{
-    float x2;
-    float y2;
-    float x;
-    float y;
-}*itemPathCommand_SmoothCubicCurveto;
+// typedef struct _itemPathCommand_SmoothCubicCurveto
+// {
+//     float x2;
+//     float y2;
+//     float x;
+//     float y;
+// }*itemPathCommand_SmoothCubicCurveto;
 
 //	-- Path : QuadraticCurveTo 二次贝塞尔曲线--
-typedef struct _itemPathCommand_QuadraticCurveto
-{
-    float x1;
-    float y1;
-    float x;
-    float y;
-}*itemPathCommand_QuadraticCurveto;
+// typedef struct _itemPathCommand_QuadraticCurveto
+// {
+//     float x1;
+//     float y1;
+//     float x;
+//     float y;
+// }*itemPathCommand_QuadraticCurveto;
 
 //	-- Path : SmoothQuadraticCurveTo 平滑二次贝塞尔曲线--
-typedef struct _itemPathCommand_SmoothQuadraticCurveto
-{
-    float x1;
-    float y1;
-    float x;
-    float y;
-}*itemPathCommand_SmoothQuadraticCurveto;
+// typedef struct _itemPathCommand_SmoothQuadraticCurveto
+// {
+//     float x1;
+//     float y1;
+//     float x;
+//     float y;
+// }*itemPathCommand_SmoothQuadraticCurveto;
 
 //	-- Path : Arc 弧形--
+// typedef struct _itemPathCommand_Arcto
+// {
+//     float rx;   //x轴半径
+//     float ry;   //y轴半径
+//     float x_axis_angle; //x轴旋转角度
+//     float large_arc;    //角度大小 0(小角度弧) 1(大角度弧)
+//     float sweep_flag;   //弧线方向 0(逆时针) 1(顺时针)
+//     float x;   //起点
+//     float y;   //
+// }*itemPathCommand_Arcto;
+//
 typedef struct _itemPathCommand_Arcto
 {
-    float rx;   //x轴半径
-    float ry;   //y轴半径
-    float x_axis_angle; //x轴旋转角度
-    float large_arc;    //角度大小 0(小角度弧) 1(大角度弧)
-    float sweep_flag;   //弧线方向 0(逆时针) 1(顺时针)
-    float x;   //起点
-    float y;   //
+    float cx;   //x轴半径
+    float cy;   //y轴半径
+    float radius; //x轴旋转角度
+    float start_angle;    //角度大小 0(小角度弧) 1(大角度弧)
+    float end_angle;   //弧线方向 0(逆时针) 1(顺时针)
 }*itemPathCommand_Arcto;
 
 
 extern T_Point      itemPoint_new(float x,float y);
+extern void         itemPoint_set_x(T_Point point,float x);
+extern void         itemPoint_set_y(T_Point point,float y);
 extern float        itemPoint_get_x(T_Point point);
 extern float        itemPoint_get_y(T_Point point);
 extern T_Rect       itemRect_new(float x,float y,float width,float height,float rx,float ry);
@@ -126,9 +146,9 @@ extern itemPathCommandId itemPathCommand_get_commandid(T_Pathcommand path_comman
 extern itemPathCommand_Moveto  itemPathCommand_get_moveto(T_Pathcommand path_command);
 extern itemPathCommand_Lineto              itemPathCommand_get_lineto(T_Pathcommand path_command);
 extern itemPathCommand_CubicCruveto        itemPathCommand_get_cubiccurveto(T_Pathcommand path_command);
-extern itemPathCommand_SmoothCubicCurveto  itemPathCommand_get_smoothcubiccurveto(T_Pathcommand path_command);
-extern itemPathCommand_QuadraticCurveto    itemPathCommand_get_quadraticcurveto(T_Pathcommand path_command);
-extern itemPathCommand_SmoothQuadraticCurveto itemPathCommand_get_smoothquadraticcurveto(T_Pathcommand path_command);
+//extern itemPathCommand_SmoothCubicCurveto  itemPathCommand_get_smoothcubiccurveto(T_Pathcommand path_command);
+//extern itemPathCommand_QuadraticCurveto    itemPathCommand_get_quadraticcurveto(T_Pathcommand path_command);
+//extern itemPathCommand_SmoothQuadraticCurveto itemPathCommand_get_smoothquadraticcurveto(T_Pathcommand path_command);
 extern itemPathCommand_Arcto               itemPathCommand_get_arcto(T_Pathcommand path_command);
 
 

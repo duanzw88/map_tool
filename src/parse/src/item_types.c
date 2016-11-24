@@ -75,9 +75,9 @@ struct T_Pathcommand
         itemPathCommand_Moveto              tMoveto;
         itemPathCommand_Lineto              tLineto;
         itemPathCommand_CubicCruveto        tCubicCurveto;
-        itemPathCommand_SmoothCubicCurveto  tSmoothCubicCurveto;
-        itemPathCommand_QuadraticCurveto    tQuadraticCurveto;
-        itemPathCommand_SmoothQuadraticCurveto tSmoothQuadraticCurveto;
+        //itemPathCommand_SmoothCubicCurveto  tSmoothCubicCurveto;
+        //itemPathCommand_QuadraticCurveto    tQuadraticCurveto;
+        //itemPathCommand_SmoothQuadraticCurveto tSmoothQuadraticCurveto;
         itemPathCommand_Arcto               tArcto;
     }pathStyle;
 };
@@ -91,6 +91,16 @@ T_Point     itemPoint_new(float x,float y)
     point->x = x;
     point->y = y;
     return point;
+}
+void         itemPoint_set_x(T_Point point,float x)
+{
+    assert(point);
+    point->x = x;
+}
+void         itemPoint_set_y(T_Point point,float y)
+{
+    assert(point);
+    point->y = y;
 }
 float itemPoint_get_x(T_Point point)
 {
@@ -242,55 +252,52 @@ T_Pathcommand itemPathCommand_new(int pathId, ...)
             command->pathStyle.tCubicCurveto->x = x;
             command->pathStyle.tCubicCurveto->y = y;
             break;
-    	case ITEM_PATH_CMD_ID_SMOOTH_CUBIC_CURVETO:
-            command->pathStyle.tSmoothCubicCurveto = CALLOC(1,sizeof(struct _itemPathCommand_SmoothCubicCurveto));
-            x2 = va_arg(var,double);
-            y2 = va_arg(var,double);
-            x = va_arg(var,double);
-            y = va_arg(var,double);
-            command->pathStyle.tSmoothCubicCurveto->x2 = x2;
-            command->pathStyle.tSmoothCubicCurveto->y2 = y2;
-            command->pathStyle.tSmoothCubicCurveto->x = x;
-            command->pathStyle.tSmoothCubicCurveto->y = y;
-            break;
-    	case ITEM_PATH_CMD_ID_QUADRATIC_CURVETO:
-            command->pathStyle.tQuadraticCurveto = CALLOC(1,sizeof(struct _itemPathCommand_QuadraticCurveto));
-            x1 = va_arg(var,double);
-            y1 = va_arg(var,double);
-            x = va_arg(var,double);
-            y = va_arg(var,double);
-            command->pathStyle.tQuadraticCurveto->x1 = x1;
-            command->pathStyle.tQuadraticCurveto->y1 = y1;
-            command->pathStyle.tQuadraticCurveto->x = x;
-            command->pathStyle.tQuadraticCurveto->y = y;
-            break;
-    	case ITEM_PATH_CMD_ID_SMOOTH_QUADRATIC_CURVETO:
-            command->pathStyle.tSmoothQuadraticCurveto = CALLOC(1,sizeof(struct _itemPathCommand_SmoothQuadraticCurveto));
-            x1 = va_arg(var,double);
-            y1 = va_arg(var,double);
-            x = va_arg(var,double);
-            y = va_arg(var,double);
-            command->pathStyle.tSmoothQuadraticCurveto->x1 = x1;
-            command->pathStyle.tSmoothQuadraticCurveto->y1 = y1;
-            command->pathStyle.tSmoothQuadraticCurveto->x = x;
-            command->pathStyle.tSmoothQuadraticCurveto->y = y;
-            break;
+    	// case ITEM_PATH_CMD_ID_SMOOTH_CUBIC_CURVETO:
+        //     command->pathStyle.tSmoothCubicCurveto = CALLOC(1,sizeof(struct _itemPathCommand_SmoothCubicCurveto));
+        //     x2 = va_arg(var,double);
+        //     y2 = va_arg(var,double);
+        //     x = va_arg(var,double);
+        //     y = va_arg(var,double);
+        //     command->pathStyle.tSmoothCubicCurveto->x2 = x2;
+        //     command->pathStyle.tSmoothCubicCurveto->y2 = y2;
+        //     command->pathStyle.tSmoothCubicCurveto->x = x;
+        //     command->pathStyle.tSmoothCubicCurveto->y = y;
+        //     break;
+    	// case ITEM_PATH_CMD_ID_QUADRATIC_CURVETO:
+        //     command->pathStyle.tQuadraticCurveto = CALLOC(1,sizeof(struct _itemPathCommand_QuadraticCurveto));
+        //     x1 = va_arg(var,double);
+        //     y1 = va_arg(var,double);
+        //     x = va_arg(var,double);
+        //     y = va_arg(var,double);
+        //     command->pathStyle.tQuadraticCurveto->x1 = x1;
+        //     command->pathStyle.tQuadraticCurveto->y1 = y1;
+        //     command->pathStyle.tQuadraticCurveto->x = x;
+        //     command->pathStyle.tQuadraticCurveto->y = y;
+        //     break;
+    	// case ITEM_PATH_CMD_ID_SMOOTH_QUADRATIC_CURVETO:
+        //     command->pathStyle.tSmoothQuadraticCurveto = CALLOC(1,sizeof(struct _itemPathCommand_SmoothQuadraticCurveto));
+        //     x1 = va_arg(var,double);
+        //     y1 = va_arg(var,double);
+        //     x = va_arg(var,double);
+        //     y = va_arg(var,double);
+        //     command->pathStyle.tSmoothQuadraticCurveto->x1 = x1;
+        //     command->pathStyle.tSmoothQuadraticCurveto->y1 = y1;
+        //     command->pathStyle.tSmoothQuadraticCurveto->x = x;
+        //     command->pathStyle.tSmoothQuadraticCurveto->y = y;
+        //     break;
     	case ITEM_PATH_CMD_ID_ARCTO:
             command->pathStyle.tArcto = CALLOC(1,sizeof(struct _itemPathCommand_Arcto));
-            float rx = va_arg(var,double);
-            float ry = va_arg(var,double);
-            float x_axis_angle = va_arg(var,double);
-            float large_arc = va_arg(var,double);
-            float sweep_flag = va_arg(var,double);
-            x = va_arg(var,double);
-            y = va_arg(var,double);
-            command->pathStyle.tArcto->rx = rx;
-            command->pathStyle.tArcto->ry = ry;
-            command->pathStyle.tArcto->x_axis_angle = x_axis_angle;
-            command->pathStyle.tArcto->large_arc = large_arc;
-            command->pathStyle.tArcto->sweep_flag = sweep_flag;
-            command->pathStyle.tArcto->x = x;
-            command->pathStyle.tArcto->y = y;
+            float cx = va_arg(var,double);
+            float cy = va_arg(var,double);
+            float radius = va_arg(var,double);
+            float start_angle = va_arg(var,double);
+            float end_angle = va_arg(var,double);
+
+            command->pathStyle.tArcto->cx = cx;
+            command->pathStyle.tArcto->cy = cy;
+            command->pathStyle.tArcto->radius = radius;
+            command->pathStyle.tArcto->start_angle = start_angle;
+            command->pathStyle.tArcto->end_angle = end_angle;
             break;
     	case ITEM_PATH_CMD_ID_END:
             command->pathStyle.tLineto = CALLOC(1,sizeof( struct _itemPathCommand_Lineto));
@@ -328,24 +335,24 @@ itemPathCommand_CubicCruveto        itemPathCommand_get_cubiccurveto(T_Pathcomma
     assert(path_command->pathId == ITEM_PATH_CMD_ID_CUBIC_CURVETO);
     return path_command->pathStyle.tCubicCurveto;
 }
-itemPathCommand_SmoothCubicCurveto  itemPathCommand_get_smoothcubiccurveto(T_Pathcommand path_command)
-{
-    assert(path_command);
-    assert(path_command->pathId == ITEM_PATH_CMD_ID_SMOOTH_CUBIC_CURVETO);
-    return path_command->pathStyle.tSmoothCubicCurveto;
-}
-itemPathCommand_QuadraticCurveto    itemPathCommand_get_quadraticcurveto(T_Pathcommand path_command)
-{
-    assert(path_command);
-    assert(path_command->pathId == ITEM_PATH_CMD_ID_QUADRATIC_CURVETO);
-    return path_command->pathStyle.tQuadraticCurveto;
-}
-itemPathCommand_SmoothQuadraticCurveto itemPathCommand_get_smoothquadraticcurveto(T_Pathcommand path_command)
-{
-    assert(path_command);
-    assert(path_command->pathId == ITEM_PATH_CMD_ID_SMOOTH_QUADRATIC_CURVETO);
-    return path_command->pathStyle.tSmoothQuadraticCurveto;
-}
+// itemPathCommand_SmoothCubicCurveto  itemPathCommand_get_smoothcubiccurveto(T_Pathcommand path_command)
+// {
+//     assert(path_command);
+//     assert(path_command->pathId == ITEM_PATH_CMD_ID_SMOOTH_CUBIC_CURVETO);
+//     return path_command->pathStyle.tSmoothCubicCurveto;
+// }
+// itemPathCommand_QuadraticCurveto    itemPathCommand_get_quadraticcurveto(T_Pathcommand path_command)
+// {
+//     assert(path_command);
+//     assert(path_command->pathId == ITEM_PATH_CMD_ID_QUADRATIC_CURVETO);
+//     return path_command->pathStyle.tQuadraticCurveto;
+// }
+// itemPathCommand_SmoothQuadraticCurveto itemPathCommand_get_smoothquadraticcurveto(T_Pathcommand path_command)
+// {
+//     assert(path_command);
+//     assert(path_command->pathId == ITEM_PATH_CMD_ID_SMOOTH_QUADRATIC_CURVETO);
+//     return path_command->pathStyle.tSmoothQuadraticCurveto;
+// }
 itemPathCommand_Arcto itemPathCommand_get_arcto(T_Pathcommand path_command)
 {
     assert(path_command);

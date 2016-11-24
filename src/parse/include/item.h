@@ -20,13 +20,21 @@ typedef enum itemKind
 }itemKind;
 extern T item_new(itemKind kind);
 extern itemKind item_get_kind(T item);
+//点
 extern void item_set_point(T item,itemPoint_t point);
+//线
 extern void item_set_line(T item,itemLine_t line);
+//矩形
 extern void item_set_rect(T item,itemRect_t rect);
+//圆
 extern void item_set_circle(T item,itemCircle_t circle);
+//椭圆
 extern void item_set_ellipse(T item,itemEllipse_t ellipse);
+//折线
 extern void item_set_polyline(T item,itemPolyline_t polyline);
+//多边形
 extern void item_set_polygon(T item,itemPolygon_t polygon);
+//路径
 extern void item_set_path(T item,itemPath_t path);
 
 extern itemPoint_t item_get_point(T item);

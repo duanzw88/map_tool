@@ -33,14 +33,14 @@ int main(int argc,char *argv[])
                 {
                     feature_t feature = element_get_features_by_index(element,f);
                     printf("\t    |--%s",feature_get_geotype(feature));
-                    for(int c = 0; c < feature_get_item_count(feature); c++)
-                    {
-                        item_t item = feature_get_item(feature,c);
-                        printf(" Kind = %d",item_get_kind(item));
-                        // coord_t coord = feature_get_coord_by_index(feature,c);
-                        // printf("(%.2f,%.2f)",coord_get_x(coord),coord_get_y(coord));
-                    }
-                    printf("\n");
+                    // for(int c = 0; c < feature_get_item_count(feature); c++)
+                    // {
+                    //     item_t item = feature_get_item(feature,c);
+                    //     printf(" Kind = %d",item_get_kind(item));
+                    //     // coord_t coord = feature_get_coord_by_index(feature,c);
+                    //     // printf("(%.2f,%.2f)",coord_get_x(coord),coord_get_y(coord));
+                    // }
+                    // printf("\n");
                 }
             }
         }

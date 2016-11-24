@@ -14,6 +14,8 @@ extern "C"
 #define T building_t
 typedef struct T *T;
 
+// typedef struct route_node_t *route_node_t;
+
 /**
  * 新建建筑物
  * @param  name 建筑物名称
@@ -64,6 +66,16 @@ extern floor_t building_get_floor_by_name(T build,const char *name);
  * @return       楼层总数
  */
 extern int building_get_floor_count(T build);
+
+//导航相关
+extern void building_add_route(T building);
+// extern void building_digraph_set_connect(T build,int from,int to,double weight);
+// extern int  building_digraph_is_connect(T build,int from,int to);
+// extern int  building_set_unconnect(T build,int from,int to);
+// //节点属性
+// extern int  building_node_index(route_node_t route_node);
+// extern double building_node_x(route_node_t route_node);
+// extern double building_node_y(route_node_t route_node);
 
 #ifdef __cplusplus
 }
