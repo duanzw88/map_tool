@@ -15,7 +15,7 @@ extern void drawing_rect(cairo_t *cr,itemRect_t rect);
 extern void drawing_circle(cairo_t *cr,itemCircle_t circle);
 extern void drawing_ellipse(cairo_t *cr,itemEllipse_t ellipse);
 extern void drawing_polyline(cairo_t *cr,feature_t feature,itemPolyline_t polyline,float x_scale,float y_scale);
-extern void drawing_polygon(cairo_t *cr,feature_t feature,itemPolygon_t polygon);
+extern void drawing_polygon(cairo_t *cr,feature_t feature,itemPolygon_t polygon,double x_scale);
 extern void drawing_path(cairo_t *cr,feature_t feature,itemPath_t path);
 
 #endif

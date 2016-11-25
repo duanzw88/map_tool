@@ -39,6 +39,8 @@ void drawing_click_point(cairo_t *cr,float x,float y)
     cairo_arc(cr,x,y,2.0,0,2*M_PI);
     cairo_stroke_preserve(cr);
     // cairo_set_source_rgb(cr,0,0,0);
+    //
+
     cairo_fill(cr);
 }
 void drawing_point(cairo_t *cr,itemPoint_t point,float x_scale,float y_scale)
@@ -93,42 +95,42 @@ void drawing_polyline(cairo_t *cr,feature_t feature,itemPolyline_t polyline,floa
     cairo_set_source_rgba(cr,red,green,blue,alpha);
     cairo_fill(cr);
 }
-void drawing_polygon(cairo_t *cr,feature_t feature,itemPolygon_t polygon)
+void drawing_polygon(cairo_t *cr,feature_t feature,itemPolygon_t polygon,double x_scale)
 {
-    // itemPoint_t point;
-    // float red = 0.0,green = 0.0,blue = 0.0,stroke_width = 0.0,alpha = 0.0;
-    // // printf("drawing_polygon...\n");
-    //
-    // color_t color = feature_get_stroke_color(feature);
-    // red = color_get_red(color) / 255.0;
-    // green = color_get_green(color) / 255.0;
-    // blue = color_get_blue(color) / 255.0;
-    // alpha = color_get_alpha(color);
-    // // printf("stroke rgba(%.2f,%.2f,%.2f,%.2f)\n",red,green,blue,alpha);
-    // stroke_width = feature_get_stroke_width(feature);
-    //
-    // cairo_set_line_width(cr,stroke_width*x_scale);
-    // cairo_set_source_rgba(cr,red,green,blue,alpha);
-    //
-    // point = itemPolygon_get_point_by_index(polygon,0);
-    // cairo_move_to(cr,itemPoint_get_x(point) * x_scale,itemPoint_get_y(point) * y_scale);
-    //
-    // for(int i = 1; i < itemPolygon_get_point_count(polygon);i++)
-    // {
-    //     point = itemPolygon_get_point_by_index(polygon,i);
-    //     cairo_line_to(cr,itemPoint_get_x(point) * x_scale,itemPoint_get_y(point) * y_scale);
-    //     // printf("(%.2f,%.2f)\n",itemPoint_get_x(point),itemPoint_get_y(point));
-    // }
-    //
-    // cairo_stroke_preserve(cr);
-    //
-    // color = feature_get_fill_color(feature);
-    // red = color_get_red(color) / 255.0;
-    // green = color_get_green(color) / 255.0;
-    // blue = color_get_blue(color) / 255.0;
-    // alpha = color_get_alpha(color);
-    // cairo_set_source_rgba(cr,red,green,blue,alpha);
-    // cairo_fill(cr);
+    itemPoint_t point;
+    float red = 0.0,green = 0.0,blue = 0.0,stroke_width = 0.0,alpha = 0.0;
+    // printf("drawing_polygon...\n");
+
+    color_t color = feature_get_stroke_color(feature);
+    red = color_get_red(color) / 255.0;
+    green = color_get_green(color) / 255.0;
+    blue = color_get_blue(color) / 255.0;
+    alpha = color_get_alpha(color);
+    // printf("stroke rgba(%.2f,%.2f,%.2f,%.2f)\n",red,green,blue,alpha);
+    stroke_width = feature_get_stroke_width(feature);
+
+    cairo_set_line_width(cr,stroke_width*x_scale);
+    cairo_set_source_rgba(cr,red,green,blue,alpha);
+
+    point = itemPolygon_get_point_by_index(polygon,0);
+    cairo_move_to(cr,itemPoint_get_x(point) * x_scale,itemPoint_get_y(point) * x_scale);
+
+    for(int i = 1; i < itemPolygon_get_point_count(polygon);i++)
+    {
+        point = itemPolygon_get_point_by_index(polygon,i);
+        cairo_line_to(cr,itemPoint_get_x(point) * x_scale,itemPoint_get_y(point) * x_scale);
+        // printf("(%.2f,%.2f)\n",itemPoint_get_x(point),itemPoint_get_y(point));
+    }
+
+    cairo_stroke_preserve(cr);
+
+    color = feature_get_fill_color(feature);
+    red = color_get_red(color) / 255.0;
+    green = color_get_green(color) / 255.0;
+    blue = color_get_blue(color) / 255.0;
+    alpha = color_get_alpha(color);
+    cairo_set_source_rgba(cr,red,green,blue,alpha);
+    cairo_fill(cr);
 }
 void drawing_path(cairo_t *cr,feature_t feature,itemPath_t path)
 {

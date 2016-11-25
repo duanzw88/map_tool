@@ -21,6 +21,7 @@ objects = except.o \
 		seq.o \
 		ring.o \
 		sparsearray.o \
+		vector2d.o \
 		jc_errors.o \
 		cJSON.o \
 		parse.o \
@@ -75,6 +76,9 @@ $(OBJ_DIR)/ring.o:algorithm/src/ring.c
 	$(CC) $(CFLAGS) -o $@ -c $^ -I$(ALG_INCLUDE_DIR)
 $(OBJ_DIR)/sparsearray.o:algorithm/src/sparsearray.c
 	$(CC) $(CFLAGS) -o $@ -c $^ -I$(ALG_INCLUDE_DIR)
+$(OBJ_DIR)/vector2d.o:algorithm/src/vector2d.c
+	$(CC) $(CFLAGS) -o $@ -c $^ -I$(ALG_INCLUDE_DIR)
+
 
 $(OBJ_DIR)/jc_errors.o:parse/src/jc_errors.c
 	$(CC) $(CFLAGS) -o $@ -c $^ -I$(PARSE_INCLUDE_DIR)

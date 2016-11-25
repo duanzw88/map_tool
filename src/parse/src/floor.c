@@ -248,7 +248,7 @@ int floor_get_route_count(T floor)
     navilayer = floor_get_layer_by_name(floor,"road");
     if(!navilayer)
     {
-        return NULL;
+        return 0;
     }
 
     element = layer_get_element_oneway(navilayer);
@@ -295,7 +295,7 @@ seq_t floor_add_oneway_road(T floor)
         {
             itemPoint_t point = seq_get(coords,j);
             seq_addend(point_seq,point);
-            printf("one-way (%.2f,%.2f)\n",itemPoint_get_x(point),itemPoint_get_y(point));
+            //printf("one-way (%.2f,%.2f)\n",itemPoint_get_x(point),itemPoint_get_y(point));
         }
     }
 

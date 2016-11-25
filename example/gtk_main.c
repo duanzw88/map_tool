@@ -127,6 +127,8 @@ struct
 static gboolean draw_callback(GtkWidget *widget,cairo_t *cr,gpointer data)
 {
 
+    double proj_x = 0.0;
+    double proj_y = 0.0;
     building_t build = (building_t)data;
     floor_t floor = building_get_floor_by_index(build,0);
     int grid = floor_get_grid(floor);
@@ -137,16 +139,7 @@ static gboolean draw_callback(GtkWidget *widget,cairo_t *cr,gpointer data)
 
     // g_print("width = %.2f height = %.2f\n",map_width,map_height);
 
-    //绘画点击事件的点
-    if(click_flag != 0)
-    {
-        drawing_click_point(cr,clickPoint.x,clickPoint.y);
-        // int y_index = (int)(clickPoint.y / grid);
-        // int x_index = (int)(int)(clickPoint.x / grid);
-        g_print("key = %d\n",floor_get_key(floor,clickPoint.x / x_scale,clickPoint.y / x_scale));
-    }
-    //画网格
-    drawing_floor_grid(cr,grid,map_width,map_height,x_scale);
+
 
     for(int j = 0;j < floor_get_layer_count(floor);j++)
     {
@@ -182,7 +175,7 @@ static gboolean draw_callback(GtkWidget *widget,cairo_t *cr,gpointer data)
                         drawing_polyline(cr,feature,item_get_polyline(item),x_scale,y_scale);
                         break;
                 	case ITEM_KIND_POLYGON:
-                        //drawing_polygon(cr,feature,item_get_polygon(item));
+                        drawing_polygon(cr,feature,item_get_polygon(item),x_scale);
                         break;
                     case ITEM_KIND_PATH:
                         //drawing_path(cr,feature,item_get_path(item));
@@ -191,6 +184,19 @@ static gboolean draw_callback(GtkWidget *widget,cairo_t *cr,gpointer data)
             }
         }
     }
+
+    //绘画点击事件的点
+    if(click_flag != 0)
+    {
+        drawing_click_point(cr,clickPoint.x,clickPoint.y);
+        building_get_near_road_point(build,clickPoint.x / x_scale,clickPoint.y / x_scale,&proj_x,&proj_y);
+        drawing_click_point(cr,proj_x * x_scale,proj_y * x_scale);
+        // int y_index = (int)(clickPoint.y / grid);
+        // int x_index = (int)(int)(clickPoint.x / grid);
+        //g_print("key = %d\n",floor_get_key(floor,clickPoint.x / x_scale,clickPoint.y / x_scale));
+    }
+    //画网格
+    drawing_floor_grid(cr,grid,map_width,map_height,x_scale);
     return FALSE;
 }
 

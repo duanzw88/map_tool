@@ -69,6 +69,7 @@ extern int building_get_floor_count(T build);
 
 //导航相关
 extern void building_add_route(T building);
+extern void building_get_near_road_point(T building,double sx,double sy,double *px,double *py);
 // extern void building_digraph_set_connect(T build,int from,int to,double weight);
 // extern int  building_digraph_is_connect(T build,int from,int to);
 // extern int  building_set_unconnect(T build,int from,int to);
