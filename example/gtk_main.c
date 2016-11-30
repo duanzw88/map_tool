@@ -3,6 +3,7 @@
 #include "building.h"
 #include "parse.h"
 #include "render.h"
+#include "routenode.h"
 
 #define DEFAULT_WIDTH 800
 #define DEFAULT_HEIGHT 740
@@ -22,111 +23,9 @@ struct
 
 // floor_t current_floor;
 
-// static void drawing_polygon(cairo_t *cr,feature_t feature,itemPolygon_t polygon)
-// {
-//     itemPoint_t point;
-//     float red = 0.0,green = 0.0,blue = 0.0,stroke_width = 0.0,alpha = 0.0;
-//     // printf("drawing_polygon...\n");
-//
-//     color_t color = feature_get_stroke_color(feature);
-//     red = color_get_red(color) / 255.0;
-//     green = color_get_green(color) / 255.0;
-//     blue = color_get_blue(color) / 255.0;
-//     alpha = color_get_alpha(color);
-//     // printf("stroke rgba(%.2f,%.2f,%.2f,%.2f)\n",red,green,blue,alpha);
-//     stroke_width = feature_get_stroke_width(feature);
-//
-//     cairo_set_line_width(cr,stroke_width*x_scale);
-//     cairo_set_source_rgba(cr,red,green,blue,alpha);
-//
-//     point = itemPolygon_get_point_by_index(polygon,0);
-//     cairo_move_to(cr,itemPoint_get_x(point) * x_scale,itemPoint_get_y(point) * y_scale);
-//
-//     for(int i = 1; i < itemPolygon_get_point_count(polygon);i++)
-//     {
-//         point = itemPolygon_get_point_by_index(polygon,i);
-//         cairo_line_to(cr,itemPoint_get_x(point) * x_scale,itemPoint_get_y(point) * y_scale);
-//         // printf("(%.2f,%.2f)\n",itemPoint_get_x(point),itemPoint_get_y(point));
-//     }
-//
-//     cairo_stroke_preserve(cr);
-//
-//     color = feature_get_fill_color(feature);
-//     red = color_get_red(color) / 255.0;
-//     green = color_get_green(color) / 255.0;
-//     blue = color_get_blue(color) / 255.0;
-//     alpha = color_get_alpha(color);
-//     cairo_set_source_rgba(cr,red,green,blue,alpha);
-//     cairo_fill(cr);
-// }
-// static void drawing_path(cairo_t *cr,feature_t feature,itemPath_t path)
-// {
-//     // printf("draw path...\n");
-//     itemPoint_t point;
-//     itemPathCommand_t path_command;
-//     float red = 0.0,green = 0.0,blue = 0.0,stroke_width = 0.0,alpha = 0.0;
-//
-//     color_t color = feature_get_stroke_color(feature);
-//     red = color_get_red(color) / 255.0;
-//     green = color_get_green(color) / 255.0;
-//     blue = color_get_blue(color) / 255.0;
-//     alpha = color_get_alpha(color);
-//
-//     stroke_width = feature_get_stroke_width(feature);
-//     cairo_set_line_width(cr,stroke_width*x_scale);
-//     cairo_set_source_rgba(cr,red,green,blue,alpha);
-//     // printf("path count = %d\n",itemPath_get_pathcommand_count(path));
-//     for(int i = 0; i < itemPath_get_pathcommand_count(path); i++)
-//     {
-//         path_command = itemPath_get_pathcommand_by_index(path,i);
-//         itemPathCommandId id = itemPathCommand_get_commandid(path_command);
-//         if(id == ITEM_PATH_CMD_ID_MOVETO)
-//         {
-//             itemPathCommand_Moveto moveto = itemPathCommand_get_moveto(path_command);
-//             float x = moveto->x * x_scale;
-//             float y = moveto->y * y_scale;
-//             printf("draw moveto (%.2f %.2f)\n",x,y);
-//             cairo_move_to(cr,moveto->x * x_scale,moveto->y * y_scale);
-//         }
-//         else if(id == ITEM_PATH_CMD_ID_LINETO)
-//         {
-//             itemPathCommand_Lineto lineto = itemPathCommand_get_lineto(path_command);
-//             cairo_line_to(cr,lineto->x * x_scale,lineto->y * y_scale);
-//         }
-//         else if(id == ITEM_PATH_CMD_ID_CUBIC_CURVETO)
-//         {
-//             itemPathCommand_CubicCruveto curveto = itemPathCommand_get_cubiccurveto(path_command);
-//             float x1 = curveto->x1 * x_scale;
-//             float y1 = curveto->y1 * x_scale;
-//             float x2 = curveto->x2 * x_scale;
-//             float y2 = curveto->y2 * x_scale;
-//             float x = curveto->x * x_scale;
-//             float y = curveto->y * x_scale;
-//             printf("draw curveto...(%.2f %.2f %.2f %.2f %.2f %.2f)\n",x1,y1,x2,y2,x,y);
-//             cairo_curve_to(cr,curveto->x1* x_scale,curveto->y1* x_scale,curveto->x2* x_scale,curveto->y2* x_scale,curveto->x* x_scale,curveto->y* x_scale);
-//         }
-//         else if(id == ITEM_PATH_CMD_ID_ARCTO)
-//         {
-//             itemPathCommand_Arcto arcto = itemPathCommand_get_arcto(path_command);
-//             cairo_arc(cr,arcto->cx * x_scale,arcto->cy * x_scale,arcto->radius * x_scale,arcto->start_angle,arcto->end_angle);
-//         }
-//
-//     }
-//
-//     cairo_stroke_preserve(cr);
-//
-//     color = feature_get_fill_color(feature);
-//     red = color_get_red(color) / 255.0;
-//     green = color_get_green(color) / 255.0;
-//     blue = color_get_blue(color) / 255.0;
-//     alpha = color_get_alpha(color);
-//     cairo_set_source_rgba(cr,red,green,blue,alpha);
-//     cairo_fill(cr);
-//
-// }
 static gboolean draw_callback(GtkWidget *widget,cairo_t *cr,gpointer data)
 {
-
+    int i;
     double proj_x = 0.0;
     double proj_y = 0.0;
     building_t build = (building_t)data;
@@ -136,10 +35,6 @@ static gboolean draw_callback(GtkWidget *widget,cairo_t *cr,gpointer data)
     map_height = floor_get_height(floor);
     x_scale = DEFAULT_WIDTH / map_width;
     y_scale = DEFAULT_HEIGHT / map_height;
-
-    // g_print("width = %.2f height = %.2f\n",map_width,map_height);
-
-
 
     for(int j = 0;j < floor_get_layer_count(floor);j++)
     {
@@ -185,18 +80,32 @@ static gboolean draw_callback(GtkWidget *widget,cairo_t *cr,gpointer data)
         }
     }
 
+    //画网格
+    drawing_floor_grid(cr,grid,map_width,map_height,x_scale);
     //绘画点击事件的点
     if(click_flag != 0)
     {
-        drawing_click_point(cr,clickPoint.x,clickPoint.y);
+        drawing_point(cr,clickPoint.x,clickPoint.y);
         building_get_near_road_point(build,clickPoint.x / x_scale,clickPoint.y / x_scale,&proj_x,&proj_y);
-        drawing_click_point(cr,proj_x * x_scale,proj_y * x_scale);
-        // int y_index = (int)(clickPoint.y / grid);
-        // int x_index = (int)(int)(clickPoint.x / grid);
-        //g_print("key = %d\n",floor_get_key(floor,clickPoint.x / x_scale,clickPoint.y / x_scale));
+        drawing_line(cr,clickPoint.x,clickPoint.y,proj_x * x_scale,proj_y * x_scale);
+        drawing_point(cr,proj_x * x_scale,proj_y * x_scale);
+
+        //画导航路径
+        seq_t nodes = building_route_plan_by_root(build,clickPoint.x / x_scale,clickPoint.y / x_scale,866.16,566.59);
+        for(i = 1; i < seq_length(nodes); i++)
+        {
+            routenode_t start_node = seq_get(nodes,i-1);
+            routenode_t end_node = seq_get(nodes,i);
+            drawing_line(cr,
+                        routenode_get_x(start_node) * x_scale,
+                        routenode_get_y(start_node) * x_scale,
+                        routenode_get_x(end_node) * x_scale,
+                        routenode_get_y(end_node) * x_scale );
+            // printf("(%.2f,%.2f)\n",routenode_get_x(node),routenode_get_y(node));
+        }
     }
-    //画网格
-    drawing_floor_grid(cr,grid,map_width,map_height,x_scale);
+
+
     return FALSE;
 }
 

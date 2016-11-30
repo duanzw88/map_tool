@@ -22,7 +22,6 @@ struct T
     seq_t  layers;          //本楼层layers列表
 };
 
-static double get_distance(double x1,double y1,double x2,double y2);
 /**
  * 新建楼层
  * @param  name 楼层名
@@ -252,25 +251,46 @@ int floor_get_route_count(T floor)
     }
 
     element = layer_get_element_oneway(navilayer);
-    for(i = 0; i < element_get_feature_count(element); i++)
-    {
-        feature = element_get_features_by_index(element,i);
-        seq_t coords = feature_get_road_coords(feature);
-        ret += seq_length(coords);
-    }
+    ret += element_get_feature_count(element);
+
     element = layer_get_element_twoway(navilayer);
-    for(i = 0; i < element_get_feature_count(element); i++)
-    {
-        feature = element_get_features_by_index(element,i);
-        seq_t coords = feature_get_road_coords(feature);
-        ret += seq_length(coords);
-    }
+    ret += element_get_feature_count(element);
 
     return ret;
 }
 
-//添加路点
 
+//添加路点
+void floor_add_route_nodes(T floor)
+{
+    // assert(floor);
+    // layer_t navilayer;
+    // seq_t oneway_points;
+    // seq_t twoway_points;
+    //
+    // oneway_points = floor_add_oneway_road(floor);
+    // for(j = 0; j < seq_length(oneway_points); j++)
+    // {
+    //     //一次读两个点 代表一条路
+    //     itemPoint_t start_point = seq_get(oneway_points,j);
+    //
+    //     double sx = itemPoint_get_x(start_point);
+    //     double sy = itemPoint_get_y(start_point);
+    //     double ex = itemPoint_get_x(end_point);
+    //     double ey = itemPoint_get_y(end_point);
+    //     double dist = get_distance(sx,sy,ex,ey);
+    //
+    //     itemPoint_t end_point = seq_get(oneway_points,j+1);
+    //
+    //     //添加到路途中
+    //     routenode_t startnode = routenode_new(floor_get_index(floor),node_index++,sx,sy);
+    //     routenode_t endnode = routenode_new(floor_get_index(floor),node_index++,ex,ey);
+    //     int num = seq_length(building->route_list);
+    //     route_style style = ONEWAY;
+    //     route_t route = route_new(num,startnode,endnode,dist,style);
+    //     seq_addend(building->route_list,route);
+    // }
+}
 seq_t floor_add_oneway_road(T floor)
 {
     int i,j;
@@ -295,12 +315,10 @@ seq_t floor_add_oneway_road(T floor)
         {
             itemPoint_t point = seq_get(coords,j);
             seq_addend(point_seq,point);
-            //printf("one-way (%.2f,%.2f)\n",itemPoint_get_x(point),itemPoint_get_y(point));
         }
     }
 
     return point_seq;
-
 }
 seq_t floor_add_twoway_road(T floor)
 {
@@ -332,81 +350,15 @@ seq_t floor_add_twoway_road(T floor)
 
     return point_seq;
 }
-// void floor_add_all_road_point(T floor,seq_t oneway_points,seq_t twoway_points);
-// {
-//     int i,j;
-//     long key;
-//     int point_index_car = 0;
-//     int point_index_root = 0;
-//     assert(floor);
-//     oneway_points = floor_add_oneway_road(floor);
-//     // if(oneway_points != NULL && seq_length(oneway_points) != 0)
-//     // {
-//     //     for(j = 0; j < seq_length(oneway_points);j+=2)
-//     //     {
-//     //         itemPoint_t start_point = seq_get(oneway_points,j);
-//     //         itemPoint_t end_point = seq_get(oneway_points,j+1);
-//     //         double sx = itemPoint_get_x(start_point);
-//     //         double sy = itemPoint_get_y(start_point);
-//     //         double ex = itemPoint_get_x(end_point);
-//     //         double ey = itemPoint_get_y(end_point);
-//     //
-//     //         int startKey = floor_get_key(floor,sx,sy);
-//     //         int endKey = floor_get_key(floor,ex,ey);
-//     //         double dist = get_distance(sx,sy,ex,ey);
-//     //         wdigraph_add_edge(graph_car,point_index_car,point_index_car+1,dist);
-//     //         wdigraph_add_edge(graph_root,point_index_root,point_index_root+1,dist);
-//     //         wdigraph_add_edge(graph_root,point_index_root+1,point_index_root,dist);
-//     //         point_index_car++;
-//     //         point_index_root+=2;
-//     //         // printf("one-way %d:(%.2f,%.2f)\n",key,itemPoint_get_x(point),itemPoint_get_y(point));
-//     //     }
-//     // }
-//     twoway_points = floor_add_twoway_road(floor);
-//     // if(twoway_points != NULL && seq_length(twoway_points) != 0)
-//     // {
-//     //     for(j = 0; j < seq_length(twoway_points);j+=2)
-//     //     {
-//     //         itemPoint_t start_point = seq_get(twoway_points,j);
-//     //         itemPoint_t end_point = seq_get(twoway_points,j+1);
-//     //         double sx = itemPoint_get_x(start_point);
-//     //         double sy = itemPoint_get_y(start_point);
-//     //         double ex = itemPoint_get_x(end_point);
-//     //         double ey = itemPoint_get_y(end_point);
-//     //
-//     //         int startKey = floor_get_key(floor,sx,sy);
-//     //         int endKey = floor_get_key(floor,ex,ey);
-//     //         double dist = get_distance(sx,sy,ex,ey);
-//     //         wdigraph_add_edge(graph_car,point_index_car,point_index_car+1,dist);
-//     //         wdigraph_add_edge(graph_car,point_index_car+1,point_index_car,dist);
-//     //         wdigraph_add_edge(graph_root,point_index_root,point_index_root+1,dist);
-//     //         wdigraph_add_edge(graph_root,point_index_root+1,point_index_root,dist);
-//     //         point_index_car+=2;
-//     //         point_index_root+=2;
-//     //         // printf("one-way %d:(%.2f,%.2f)\n",key,itemPoint_get_x(point),itemPoint_get_y(point));
-//     //     }
-//     // }
-//     // printf("Car:edges:%d\n",wdigraph_edges(graph_car));
-//     // printf("Root:edges:%d\n",wdigraph_edges(graph_root));
-//
-// }
+
 int floor_get_key(T floor,double x,double y)
 {
     assert(floor);
     assert(floor->grid != 0);
-    // printf("grid = %d\n",floor->grid);
+
     int x_index = (int)(x / floor->grid);
     int y_index = (int)(y / floor->grid);
-    // printf("y_index = %d x_index = %d\n",y_index,x_index);
 
-    //index      y        x
-    //------  ------- -------
+    // printf("x = %.2f y = %.2f grid = %d x_index = %d y_index = %d\n",x,y,floor->grid,x_index,y_index);
     return (floor->index << 21) + (y_index << 10) + (x_index);
-}
-
-static double get_distance(double x1,double y1,double x2,double y2)
-{
-    double dist_sq = (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1);
-
-    return sqrt(dist_sq);
 }

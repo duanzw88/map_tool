@@ -104,7 +104,7 @@ extern layer_t floor_get_layer_by_index(T floor,int index);
 extern layer_t floor_get_layer_by_name(T floor,const char *name);
 extern int      floor_get_route_count(T floor);
 //添加路点
-
+extern void     floor_add_route_nodes(T floor);
 extern seq_t floor_add_oneway_road(T floor);
 extern seq_t floor_add_twoway_road(T floor);
 //extern void floor_add_all_road_point(T floor,seq_t oneway_points,seq_t twoway_points);

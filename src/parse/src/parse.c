@@ -119,7 +119,7 @@ feature_t    parseFeature(cJSON *featureData)
     feature_set_type(feature,type);
     feature_set_geotype(feature,geo_type);
 
-    printf("       feature_name = %s\n",name);
+    // printf("       feature_name = %s\n",name);
     cJSON *itemsData = cJSON_GetObjectItem(featureData,"coords");
     item = parseItem(itemsData,geo_type);
     feature_set_item(feature,item);

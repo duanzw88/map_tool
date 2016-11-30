@@ -9,6 +9,8 @@
 #include "wdigraph.h"
 #include "routenode.h"
 #include "vector2d.h"
+#include "sparsearray.h"
+#include "route.h"
 #include "building.h"
 
 #define T building_t
@@ -18,7 +20,8 @@ struct T
     seq_t floor_seq;
     wdigraph_t graph_root;
     wdigraph_t graph_car;
-    seq_t routenode_list;
+    seq_t route_list;
+    sparsearray_t routenode_array;
 };
 // struct route_node_t
 // {
@@ -28,6 +31,15 @@ struct T
 // };
 
 static double get_distance(double x1,double y1,double x2,double y2);
+/**
+ * [add_route description]
+ * @param  building [description]
+ * @param  nodes    坐标点列表
+ * @param  flag     0 单向路 1 双向路
+ */
+void   add_route(T building,floor_t floor,seq_t nodes,int flag);
+void   add_graph(T building);
+routenode_t get_routenode_by_pointkey(T building,int point_key);
 /**
  * 新建建筑物
  * @param  name 建筑物名称
@@ -39,9 +51,10 @@ T building_new(const char *name)
     NEW(build);
     build->name = CALLOC(1,strlen(name) + 1);
     build->floor_seq = seq_new(10);
-    build->routenode_list = seq_new(20);
-    build->graph_root = NULL;
-    build->graph_car = NULL;
+    build->route_list = seq_new(20);
+    build->routenode_array = sparsearray_new(1024);
+    build->graph_root = NULL;//wdigraph_new(1024);
+    build->graph_car = NULL;//wdigraph_new(1024);
 
     strncpy(build->name,name,strlen(name));
     return build;
@@ -137,134 +150,210 @@ void building_add_route(T building)
     int node_index = 0;
     seq_t oneway_points;
     seq_t twoway_points;
-    routenode_t routenode;
+    route_t route;
     int route_count = 0;
-    for(i = 0; i < seq_length(building->floor_seq); i++)
-    {
-        floor = seq_get(building->floor_seq,i);
-        route_count += floor_get_route_count(floor);
-    }
-    building->graph_root = wdigraph_new(route_count);
-    building->graph_car = wdigraph_new(route_count * 2);
 
-    // printf("rounte count = %d\n",route_count);
     for(i = 0; i < seq_length(building->floor_seq); i++)
     {
         floor = seq_get(building->floor_seq,i);
         route_count += floor_get_route_count(floor);
+        //单向路
         oneway_points = floor_add_oneway_road(floor);
-        for(j = 0; j < seq_length(oneway_points); j+=2)
-        {
-            //一次读两个点 代表一条路
-            itemPoint_t start_point = seq_get(oneway_points,j);
-            itemPoint_t end_point = seq_get(oneway_points,j+1);
-            double sx = itemPoint_get_x(start_point);
-            double sy = itemPoint_get_y(start_point);
-            double ex = itemPoint_get_x(end_point);
-            double ey = itemPoint_get_y(end_point);
-            double dist = get_distance(sx,sy,ex,ey);
+        add_route(building,floor,oneway_points,0);
 
-
-            //添加到车行图中
-            wdigraph_add_edge(building->graph_car,node_index,node_index+1,dist);
-            //添加到人行图中
-            wdigraph_add_edge(building->graph_root,node_index,node_index+1,dist);
-            wdigraph_add_edge(building->graph_root,node_index+1,node_index,dist);
-
-            //添加到路点列表中
-            routenode = routenode_new(floor_get_index(floor),node_index++,sx,sy);
-            seq_addend(building->routenode_list,routenode);
-            routenode = routenode_new(floor_get_index(floor),node_index++,ex,ey);
-            seq_addend(building->routenode_list,routenode);
-            //int nodeKey = seq_length(building->routenode_list);
-            // printf("oneway:(%d,%.2f %.2f)-->(%d,%.2f,%.2f)\n",nodeKey-1,sx,sy,nodeKey,ex,ey);
-        }
         twoway_points = floor_add_twoway_road(floor);
-        for(j = 0; j < seq_length(twoway_points); j+=2)
-        {
-            //一次读两个点 代表一条路
-            itemPoint_t start_point = seq_get(twoway_points,j);
-            itemPoint_t end_point = seq_get(twoway_points,j+1);
-            double sx = itemPoint_get_x(start_point);
-            double sy = itemPoint_get_y(start_point);
-            double ex = itemPoint_get_x(end_point);
-            double ey = itemPoint_get_y(end_point);
-            double dist = get_distance(sx,sy,ex,ey);
-
-            //添加到车行图中
-            wdigraph_add_edge(building->graph_car,node_index,node_index+1,dist);
-            wdigraph_add_edge(building->graph_car,node_index+1,node_index,dist);
-            //添加到人行图中
-            wdigraph_add_edge(building->graph_root,node_index,node_index+1,dist);
-            wdigraph_add_edge(building->graph_root,node_index+1,node_index,dist);
-
-            routenode = routenode_new(floor_get_index(floor),node_index++,sx,sy);
-            seq_addend(building->routenode_list,routenode);
-            routenode = routenode_new(floor_get_index(floor),node_index++,ex,ey);
-            seq_addend(building->routenode_list,routenode);
-
-            int nodeKey = seq_length(building->routenode_list);
-            // printf("twoway:(%d,%.2f %.2f)<-->(%d,%.2f,%.2f)\n",nodeKey-1,sx,sy,nodeKey,ex,ey);
-            // printf("twoway:(%d,%.2f %.2f)<-->(%d,%.2f,%.2f)\n",nodeKey,ex,ey,nodeKey-1,sx,sy);
-        }
+        add_route(building,floor,twoway_points,1);
     }
+    add_graph(building);
 
-    printf("node_index = %d\n",node_index);
-    printf("Car:route = %d\n",wdigraph_edges(building->graph_car));
-    printf("Root:route = %d\n",wdigraph_edges(building->graph_root));
-    printf("route point = %d\n",seq_length(building->routenode_list));
-    for(i = 0; i < seq_length(building->routenode_list); i++)
+    for(i = 0; i < seq_length(building->route_list); i++)
     {
-        routenode = seq_get(building->routenode_list,i);
-        printf("Key:%d (%.2f,%.2f)\n",routenode_get_key(routenode),routenode_get_x(routenode),routenode_get_y(routenode));
+        route = seq_get(building->route_list,i);
+        routenode_t sn = route_get_start_node(route);
+        routenode_t en = route_get_end_node(route);
+        route_style style = route_get_style(route);
+        printf("num = %d weight = %.2f   ",route_get_num(route),route_get_weight(route));
+        printf("%d:(%.2f,%.2f)",routenode_get_key(sn),routenode_get_x(sn),routenode_get_y(sn));
+        printf("%s",style == ONEWAY ? "---->" : "<---->");
+        printf("%d:(%.2f,%.2f)\n",routenode_get_key(en),routenode_get_x(en),routenode_get_y(en));
     }
 }
 
-void building_get_near_road_point(T building,double sx,double sy,double *px,double *py)
+int building_get_near_road_point(T building,double sx,double sy,double *px,double *py)
 {
     routenode_t start_node;
     routenode_t end_node;
-    int i,j;
+    int i,j,road_num = -1;
 
-    int targetKey;
-    routenode_t targetsp;
-    routenode_t targetep;
-    routenode_t targetp;
     double min_dist = 2000000;
     assert(building);
-    assert(building->graph_car);
+    assert(building->route_list);
     point target_point = {sx,sy};
-    // point p = {sx,sy};
-    for(i = 0; i < seq_length(building->routenode_list); i+=2)
+
+    for(i = 0; i < seq_length(building->route_list); i++)
     {
-        start_node = seq_get(building->routenode_list,i);
-        end_node = seq_get(building->routenode_list,i+1);
+        route_t     route       = seq_get(building->route_list,i);
+        routenode_t start_node  = route_get_start_node(route);
+        routenode_t end_node    = route_get_end_node(route);
+
         point sp = {routenode_get_x(start_node),routenode_get_y(start_node)};
         point ep = {routenode_get_x(end_node),routenode_get_y(end_node)};
         point p_point;
         double d = vector2d_projection_by_point(target_point,sp,ep,&p_point);
 
-        // printf("d = %.2f (%.2f,%.2f)->(%.2f,%.2f)\n",d,
-        //                                             routenode_get_x(start_node),
-        //                                             routenode_get_y(start_node),
-        //                                             routenode_get_x(end_node),
-        //                                             routenode_get_y(end_node));
         if(d < min_dist)
         {
-            targetsp = start_node;
-            targetep = end_node;
             min_dist = d;
             *px = p_point.x;
             *py = p_point.y;
+            road_num = i;
         }
     }
     printf("realpoint = (%.2f,%.2f)\n",sx,sy);
-    printf("d = %.2f (%.2f,%.2f)->(%.2f,%.2f) proj(%.2f,%.2f)\n",min_dist,routenode_get_x(targetsp),routenode_get_y(targetsp),routenode_get_x(targetep),routenode_get_y(targetep),*px,*py);
+    //以下部分纯属为了测试
+    route_t route   = seq_get(building->route_list,road_num);
+    routenode_t sn  = route_get_start_node(route);
+    routenode_t en  = route_get_end_node(route);
+    route_style style = route_get_style(route);
+    printf("num = %d weight = %.2f",route_get_num(route),min_dist);
+    printf("(%.2f,%.2f)",routenode_get_x(sn),routenode_get_y(sn));
+    printf("%s",style == ONEWAY ? "---->" : "<---->");
+    printf("(%.2f,%.2f)\n",routenode_get_x(en),routenode_get_y(en));
+    // printf("d = %.2f (%.2f,%.2f)->(%.2f,%.2f) proj(%.2f,%.2f)\n",min_dist,routenode_get_x(targetsp),routenode_get_y(targetsp),routenode_get_x(targetep),routenode_get_y(targetep),*px,*py);
 
+    return road_num;
 }
+
+seq_t building_route_plan_by_root(T building,double sx,double sy,double ex,double ey)
+{
+    int road_num = -1;
+    double projx = 0.0;
+    double projy = 0.0;
+    seq_t nodes = seq_new(2);
+    // //先把终点投影到路上并添加到途中
+    // road_num = building_get_near_road_point(building,ex,ey,&projx,&projy);
+    // //对终点所在路的两个端点进行路径规划
+    // route_t route = seq_get(building->route_list,road_num);
+    // //routenode_t sn = route_get_start_node(route);
+    // routenode_t en = route_get_end_node(route);
+    // printf("终点 = %d\n",road_num);
+    // // printf("sn = %d en = %d\n",routenode_get_key(sn),routenode_get_key(en));
+    //
+    // //把起点投影到路上并添加到图中
+    // road_num = building_get_near_road_point(building,sx,sy,&projx,&projy);
+    // route_t route_start = seq_get(building->route_list,road_num);
+    // routenode_t sn = route_get_start_node(route);
+    // printf("起点 = %d\n",road_num);
+
+
+    seq_t point_seq = wdigraph_path(building->graph_root,9,6);
+    for(int i = 0; i < seq_length(point_seq); i++)
+    {
+        routenode_t node = get_routenode_by_pointkey(building,seq_get(point_seq,i));
+        if(node != NULL)
+        {
+            seq_addend(nodes,node);
+        }
+    }
+
+    // seq_t result = wdigraph_path(building->graph_root,routenode_get_key(sn),;
+    //printf("result = %d\n",result == NULL ? 0 : seq_length(point_seq));
+
+    //规划路径
+    return nodes;
+}
+
 static double get_distance(double x1,double y1,double x2,double y2)
 {
     double dist_sq = (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1);
 
     return sqrt(dist_sq);
+}
+void   add_route(T building,floor_t floor,seq_t nodes,int flag)
+{
+    int j;
+    for(j = 0; j < seq_length(nodes); j+=2)
+    {
+        //一次读两个点 代表一条路
+        itemPoint_t start_point = seq_get(nodes,j);
+        double sx   = itemPoint_get_x(start_point);
+        double sy   = itemPoint_get_y(start_point);
+        int    skey  = floor_get_key(floor,sx,sy);
+        //查询该点是否已经存储
+        routenode_t startnode = sparsearray_get(building->routenode_array,skey);
+        if(startnode == NULL)
+        {
+            startnode = routenode_new(floor_get_index(floor),sparsearray_length(building->routenode_array)+1,sx,sy);
+            sparsearray_put(building->routenode_array,skey,startnode);
+        }
+
+        itemPoint_t end_point   = seq_get(nodes,j+1);
+        double      ex          = itemPoint_get_x(end_point);
+        double      ey          = itemPoint_get_y(end_point);
+        int         ekey        = floor_get_key(floor,ex,ey);
+        routenode_t endnode = sparsearray_get(building->routenode_array,ekey);
+        if(endnode == NULL)
+        {
+            endnode = routenode_new(floor_get_index(floor),sparsearray_length(building->routenode_array)+1,ex,ey);
+            sparsearray_put(building->routenode_array,ekey,endnode);
+        }
+
+        double dist = get_distance(sx,sy,ex,ey);
+        //添加到路途中
+        startnode   = sparsearray_get(building->routenode_array,skey);
+        endnode     = sparsearray_get(building->routenode_array,ekey);
+        int num     = seq_length(building->route_list)+1;
+        route_style style = flag == 0 ? ONEWAY : TWOWAY;
+        route_t route = route_new(num,startnode,endnode,dist,style);
+        seq_addend(building->route_list,route);
+    }
+}
+void   add_graph(T building)
+{
+    int i = 0;
+    building->graph_root = wdigraph_new(seq_length(building->route_list)+1);
+    building->graph_car = wdigraph_new(seq_length(building->route_list)+1);
+    for(i = 0; i < seq_length(building->route_list); i++)
+    {
+        route_t route = seq_get(building->route_list,i);
+        routenode_t sn      = route_get_start_node(route);
+        routenode_t en      = route_get_end_node(route);
+        route_style style   = route_get_style(route);
+        double      dist    = route_get_weight(route);
+        int         skey    = routenode_get_key(sn);
+        int         ekey    = routenode_get_key(en);
+
+        if(style == ONEWAY)
+        {
+            //添加到步行图中
+            wdigraph_add_edge(building->graph_root,skey,ekey,dist);
+            wdigraph_add_edge(building->graph_root,ekey,skey,dist);
+            //添加到车行图中
+            wdigraph_add_edge(building->graph_car,skey,ekey,dist);
+        }
+        else if(style == TWOWAY)
+        {
+            //添加到步行图中
+            wdigraph_add_edge(building->graph_root,skey,ekey,dist);
+            wdigraph_add_edge(building->graph_root,ekey,skey,dist);
+            //添加到车行图中
+            wdigraph_add_edge(building->graph_car,skey,ekey,dist);
+            wdigraph_add_edge(building->graph_car,ekey,skey,dist);
+        }
+    }
+}
+routenode_t get_routenode_by_pointkey(T building,int point_key)
+{
+    int i;
+    routenode_t node;
+    for(i = 0; i < sparsearray_length(building->routenode_array); i++)
+    {
+        node = sparsearray_get_at(building->routenode_array,i);
+        if(routenode_get_key(node) == point_key)
+        {
+            return node;
+        }
+    }
+
+    return NULL;
 }

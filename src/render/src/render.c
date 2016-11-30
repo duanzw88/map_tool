@@ -1,16 +1,9 @@
 
+#include <stdlib.h>
 #include <math.h>
+#include<time.h>
 #include "render.h"
 
-// float x_scale = 1.0;
-// float y_scale = 1.0;
-//
-// void drawing_profile(float xscale,float yscale)
-// {
-//     x_scale = xscale;
-//     y_scale = yscale;
-// }
-//
 void drawing_floor_grid(cairo_t *cr,int grid,float width,float height,float scale)
 {
     int i;
@@ -31,23 +24,55 @@ void drawing_floor_grid(cairo_t *cr,int grid,float width,float height,float scal
     // cairo_set_source_rgb(cr,0,0,0);
     cairo_fill(cr);
 }
-void drawing_click_point(cairo_t *cr,float x,float y)
+// void drawing_click_point(cairo_t *cr,float x,float y)
+// {
+//     cairo_set_line_width(cr,2);
+//     cairo_set_source_rgb(cr,1,0,0);
+//
+//     cairo_arc(cr,x,y,2.0,0,2*M_PI);
+//     cairo_stroke_preserve(cr);
+//
+//     cairo_fill(cr);
+// }
+// extern void drawing_line_by_coord(cairo_t *cr,float sx,float sy,float ex,float ey,float scale)
+// {
+//     int i;
+//     cairo_set_line_width(cr,2);
+//     cairo_set_source_rgba(cr,1,0,0,1);
+//
+//     cairo_move_to(cr,sx,sy);
+//     cairo_line_to(cr,ex * scale,ey * scale);
+//
+//     cairo_stroke_preserve(cr);
+//     cairo_fill(cr);
+// }
+void drawing_point(cairo_t *cr,float x,float y)
 {
     cairo_set_line_width(cr,2);
     cairo_set_source_rgb(cr,1,0,0);
 
     cairo_arc(cr,x,y,2.0,0,2*M_PI);
     cairo_stroke_preserve(cr);
-    // cairo_set_source_rgb(cr,0,0,0);
-    //
 
     cairo_fill(cr);
 }
-void drawing_point(cairo_t *cr,itemPoint_t point,float x_scale,float y_scale)
+void drawing_line(cairo_t *cr,float sx,float sy,float ex,float ey)
 {
-}
-void drawing_line(cairo_t *cr,itemPoint_t line,float x_scale,float y_scale)
-{
+    int i;
+    srand((unsigned)time(NULL));
+    cairo_set_line_width(cr,2);
+    double r = rand()/(RAND_MAX+1.0);
+    double g = rand()/(RAND_MAX+1.0);
+    double b = rand()/(RAND_MAX+1.0);
+
+    printf("r = %.2f g = %.2f b = %.2f\n",r,g,b);
+    cairo_set_source_rgba(cr,r,g,b,1);
+
+    cairo_move_to(cr,sx,sy);
+    cairo_line_to(cr,ex,ey);
+
+    cairo_stroke_preserve(cr);
+    cairo_fill(cr);
 }
 void drawing_rect(cairo_t *cr,itemRect_t rect)
 {

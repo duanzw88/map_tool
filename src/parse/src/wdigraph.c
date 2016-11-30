@@ -184,26 +184,44 @@ int wdigraph_has_path(T wdigraph,int v,int w)
  */
 seq_t wdigraph_path(T wdigraph,int v,int w)
 {
+    printf("wdigraph path...\n");
     assert(wdigraph);
     assert(v >= 0 && v < wdigraph->vertexs);
     assert(w >= 0 && w < wdigraph->vertexs);
     double *distTo = ALLOC(sizeof(double) * wdigraph->vertexs);
-    struct adj **edgeTo = ALLOC(sizeof(struct adj *) * wdigraph->vertexs);
+    struct adj **edgeTo = CALLOC(1,sizeof(struct adj *) * wdigraph->vertexs);
+
+    printf("*edgeTo = %u\n",*edgeTo);
     iminipq_t pq = iminipq_new(wdigraph->vertexs);
 
     wdigraph_dijkstra(wdigraph,v,distTo,edgeTo,pq);
     seq_t seq = seq_new(wdigraph->vertexs);
-    struct adj *p;
-    for(p = edgeTo[w]; p != NULL; p = edgeTo[p->from])
+
+    if(edgeTo == NULL)
     {
-        seq_addstart(seq,p->to);
+        printf("alloc failed...\n");
+        return seq;
     }
+
+    struct adj *p;
+    printf("wdigraph path...m1\n");
+    p = edgeTo[w];
+    while(p != NULL)
+    {
+        printf("wdigraph path...m2\n");
+        printf("from:to = %d:%d\n",p->from,p->to);
+        seq_addstart(seq,p->to);
+        printf("wdigraph path...m3\n");
+        p = edgeTo[p->from];
+        printf("wdigraph path...m4\n");
+    }
+
     seq_addstart(seq,v);
-    // printf("\n");
 
     FREE(distTo);
     FREE(edgeTo);
     iminipq_free(&pq);
+    printf("wdigraph path...end\n");
     return seq;
 }
 /**

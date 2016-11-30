@@ -8,9 +8,10 @@
 
 // extern void drawing_profile(float x_scale,float y_scale);
 extern void drawing_floor_grid(cairo_t *cr,int grid,float width,float height,float scale);
-extern void drawing_click_point(cairo_t *cr,float x,float y);
-extern void drawing_point(cairo_t *cr,itemPoint_t point,float x_scale,float y_scale);
-extern void drawing_line(cairo_t *cr,itemPoint_t line,float x_scale,float y_scale);
+//extern void drawing_click_point(cairo_t *cr,float x,float y);
+// extern void drawing_line_by_coord(cairo_t *cr,float sx,float sy,float ex,float ey,float scale);
+extern void drawing_point(cairo_t *cr,float x,float y);
+extern void drawing_line(cairo_t *cr,float sx,float sy,float ex,float ey);
 extern void drawing_rect(cairo_t *cr,itemRect_t rect);
 extern void drawing_circle(cairo_t *cr,itemCircle_t circle);
 extern void drawing_ellipse(cairo_t *cr,itemEllipse_t ellipse);
